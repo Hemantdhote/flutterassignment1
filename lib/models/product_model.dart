@@ -14,9 +14,9 @@ class Product{
   });
 
   Product.fromJson(Map<String, dynamic> data): 
-        id = data['id'],
-        title = data['title'],
-        image = data['thumbnail'],
-        price = data['price'].toDouble(),
-        rating = data['rating'].toDouble();
+        id = data['id'] ?? 0,
+        title = data['title'] ?? '',
+        image = data['thumbnail'] ?? '',
+        price = (data['price'] ?? 0).toDouble(),
+        rating = (data['rating'] ?? 0).toDouble();
 }

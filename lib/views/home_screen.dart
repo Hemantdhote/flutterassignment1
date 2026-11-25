@@ -17,11 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    controller.fetchProducts().then((value) {
-      for (var product in controller.products) {
-        debugPrint('Title: ${product.title}');
-      }
-    });
+    controller.fetchProducts();
   }
 
   @override

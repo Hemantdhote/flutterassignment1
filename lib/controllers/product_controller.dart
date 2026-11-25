@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:assignment1/models/product_model.dart';
 import 'package:assignment1/services/product_service.dart';
 import 'package:get/get.dart';
@@ -5,15 +7,26 @@ import 'package:get/get.dart';
 class ProductController extends GetxController {
   ProductService productService = ProductService();
 
-  RxList<Product> products = <Product>[].obs;
-  RxBool isLoading = false.obs;
-  RxString error = ''.obs;
+  final products = <Product>[].obs;
+  final isLoading = false.obs;
+  final error = ''.obs;
+  final cart = <int, int>{}.obs;
 
   Future<void> fetchProducts() async {
     try {
       isLoading.value = true;
-      List<Product> result = await productService.fetchProducts();
-      products.value = result;
+      error.value = '';
+      String response = await productService.fetchProducts();
+      var data= jsonDecode(response);
+      var productList = data['products'];
+      List<Product> productData = [];
+
+      for (var item in productList) {
+        Product product = Product.fromJson(item);
+        productData.add(product);
+      }
+      
+      products.value = productData;
     } catch (err) {
       error.value = err.toString();
     } finally {
@@ -21,15 +34,11 @@ class ProductController extends GetxController {
     }
   }
 
-  RxMap<int, int> cart = <int, int>{}.obs;
-
   int get cartCount {
     int count = 0;
-
     for (var quantity in cart.values) {
       count = count + quantity;
     }
-
     return count;
   }
 
@@ -61,13 +70,10 @@ class ProductController extends GetxController {
 
   double get totalAmount {
     double total = 0;
-
     for (var item in cart.entries) {
       Product product = products.firstWhere((p) => p.id == item.key);
-
       total = total + (product.price * item.value);
     }
-
     return total;
   }
 }

@@ -74,6 +74,23 @@ class _CartScreenState extends State<CartScreen> {
                                 height: 100,
                                 width: 100,
                                 fit: BoxFit.contain,
+                                
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      }
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    },
+
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Icon(
+                                        Icons.image_not_supported,
+                                        size: 50,
+                                      );
+                                    },
                               ),
 
                               const SizedBox(height: 5),

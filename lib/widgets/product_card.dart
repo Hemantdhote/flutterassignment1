@@ -25,7 +25,20 @@ class ProductCard extends StatelessWidget {
                 children: [
                   SizedBox(
                     width: double.infinity,
-                    child: Image.network(product.image, fit: BoxFit.contain),
+                    child: Image.network(
+                      product.image,
+                      fit: BoxFit.contain,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        }
+                        return const Center(child: CircularProgressIndicator());
+                      },
+
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.image_not_supported);
+                      },
+                    ),
                   ),
                 ],
               ),
